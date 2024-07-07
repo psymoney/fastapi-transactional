@@ -12,7 +12,7 @@ Base = declarative_base()
 
 class Database:
     def __init__(self):
-        url = ''
+        url = 'mysql+aiomysql://username:password@localhost/test?charset=utf8mb4'
         self._engine = create_async_engine(url)
 
         self._session_maker = async_sessionmaker(
