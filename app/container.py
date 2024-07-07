@@ -8,18 +8,24 @@ from app.domain_a.service import AService
 
 
 class Container(DeclarativeContainer):
-    wiring_config = WiringConfiguration(modules=[
-        '.domain_a.endpoint'
-    ])
+    wiring_config = WiringConfiguration(
+        modules=[
+            '.domain_a.endpoint',
+            '.domain_a.service'
+        ],
+    )
 
     db = providers.Singleton(Database)
 
+    transactional = providers.Callable(session=db.provided.session)
+
     a_repository = providers.Factory(
         ARepository,
-        sesseion_factory=db.provided.session
+        session_factory=db.provided.session
     )
 
     a_service = providers.Factory(
         AService,
-        repository=a_repository
+        repository=a_repository,
+        deco=transactional
     )
