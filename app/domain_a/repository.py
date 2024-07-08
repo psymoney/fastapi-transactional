@@ -13,12 +13,15 @@ class ARepository:
 
     async def do_first(self):
         async with self._session() as db:
-            print(db)
+            print(f'1st repo: {id(db)}')
+            return id(db)
 
     async def do_second(self):
         async with self._session() as db:
-            print(db)
+            print(f'2nd repo: {id(db)}')
+            return id(db)
 
     async def do_third(self):
         async with self._session() as db:
-            print(db)
+            print(f'3rd repo: {id(db)}')
+            return id(db)

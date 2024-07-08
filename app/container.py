@@ -27,5 +27,5 @@ class Container(DeclarativeContainer):
     a_service = providers.Factory(
         AService,
         repository=a_repository,
-        deco=transactional
+        session_factory=db.provided.session
     )
