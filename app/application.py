@@ -1,3 +1,6 @@
+import asyncio
+import time
+
 from fastapi import FastAPI
 
 from app.container import Container, ContainerB
@@ -31,4 +34,15 @@ def get_app_b():
     return app
 
 
-app = get_app_b()
+# app = get_app_b()
+
+app = FastAPI()
+
+@app.get('/dd')
+async def dd():
+    s = time.perf_counter()
+    print('got it will proceed computing')
+    await asyncio.sleep(2)
+    e = time.perf_counter() - s
+    print(f'time spent: {e}, handled at {time.time()}')
+    return "OK"
