@@ -1,6 +1,6 @@
-import threading
-from time import sleep
+import asyncio
 
+import httpx
 import pytest
 from fastapi.testclient import TestClient
 
@@ -12,17 +12,16 @@ def client():
     with TestClient(app) as c:
         yield c
 
-@pytest.fixture
-def client_2():
-    with TestClient(app) as c:
-        yield c
 
+@pytest.mark.asyncio
+async def test_transactional(client):
+    async with httpx.AsyncClient(app=client, base_url="http://localhost") as async_client:
+        requests = [
+            async_client.get("/")
+            for i in range(10)
+        ]
+        responses = await asyncio.gather(*requests)
 
-def test_transactional(client, client_2):
-    t1 = threading.Thread(target=client.get('/domain-a').json())
-    t2 = threading.Thread(target=client_2.get('/domain-a').json())
+        for response in responses:
+            print(response)
 
-    t1.start()
-    t2.start()
-
-    sleep(10)
